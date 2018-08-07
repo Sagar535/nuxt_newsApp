@@ -1,22 +1,24 @@
 <template>
-  <section class="container">
-    <div>
-      <app-logo/>
-      <h1 class="title">
-        nuxt_newsapp
-      </h1>
-      <h2 class="subtitle">
-        Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
+  <section class="section">
+    <div class="container">
+      <div class="columns is-multiline">
+        <div
+          class="column is-one-quarter"
+          v-for="(article, index) in articles"
+          :key="index">
+          <a :href="article.url" target="_blank">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-3by2">
+                  <img :src="article.urlToImage" :alt="article.title">
+                </figure>
+              </div>
+              <div class="card-content">
+                <div class="content">{{ article.title }}</div>
+              </div>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -26,6 +28,14 @@
 import AppLogo from '~/components/AppLogo.vue'
 
 export default {
+
+  async asyncData({ app }) {
+    const { articles } = await app.$axios.$get(
+      'https://newsapi.org/v2/top-headlines?sources=cnn&apiKey=5e4065cb078a4fd5b2f423cca3be8d17'
+    );
+
+    return { articles };
+  },
   components: {
     AppLogo
   }
